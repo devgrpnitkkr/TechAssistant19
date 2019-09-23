@@ -1,14 +1,22 @@
 const functions = require('firebase-functions');
-const { dialogflow, Carousel, List } = require('actions-on-google')
 const rp = require('request-promise')
 const timestamp = require('unix-timestamp')
+const {
+  dialogflow,
+  BasicCard,
+  Carousel,
+  List,
+  Image
+ } = require('actions-on-google')
 
 const app = dialogflow({ debug: true })
 
 const EVENT_DESCRIPTION = 'eventDescription'
 const CATEGORY_LIST = 'categoryList'
 const CATEGORY_LIST_OPTION = 'categoryList - OPTION'
+const CATEGORY_LIST_OPTION_2 = 'eventDetails - 2'
 const EVENT_LIST = 'eventList'
+const EVENT_LIST_OPTION = 'eventList - OPTION'
 const FACTS = 'facts'
 const GUEST_LECTURE = 'guestLecture'
 const SPONSERS = 'sponsers'
@@ -76,7 +84,7 @@ app.intent(CATEGORY_LIST_OPTION, (conv, params, category) => {
           description: 'Tap for details'
         }
 
-      conv.ask('Here are the different categories of events')
+      conv.ask('Here are the different ' + category + ' Events')
       conv.ask(new List({
         title: 'List of ' + category + ' Events',
         items: list
@@ -86,6 +94,27 @@ app.intent(CATEGORY_LIST_OPTION, (conv, params, category) => {
       conv.ask("Sorry, you can ask something else. Ask anything ..... m listening to you."))
 })
 
+
+app.intent(CATEGORY_LIST_OPTION_2, (conv, params, eventName) => {
+  return rp(`https://us-central1-techspardha-87928.cloudfunctions.net/api/events/search?eventName=${eventName}`)
+    .then(res => {
+
+      let data = JSON.parse(res).data
+      let description = data.description + '  \n  \n**' + data.venue + '**' 
+
+      conv.ask('Here are the details of ' + data.eventName)
+      conv.ask(new BasicCard({
+        title: data.eventName,
+        image: new Image({
+          url: data.banner,
+          alt: data.eventName
+        }),
+        text: description
+      }))
+    })
+    .catch(err =>
+      conv.ask("Sorry, you can ask something else. Ask anything ..... m listening to you."))
+})
 
 app.intent(EVENT_LIST, (conv, { category }) => {
   return rp(`https://us-central1-techspardha-87928.cloudfunctions.net/api/events?eventCategory=${category}`)
@@ -100,7 +129,7 @@ app.intent(EVENT_LIST, (conv, { category }) => {
           description: 'Tap for details'
         }
 
-      conv.ask('Here are the different categories of events')
+      conv.ask('Here are the different ' + category + ' Events')
       conv.ask(new List({
         title: 'List of ' + category + ' Events',
         items: list
@@ -111,22 +140,47 @@ app.intent(EVENT_LIST, (conv, { category }) => {
 })
 
 
+app.intent(EVENT_LIST_OPTION, (conv, params, eventName) => {
+  return rp(`https://us-central1-techspardha-87928.cloudfunctions.net/api/events/search?eventName=${eventName}`)
+    .then(res => {
+
+      let data = JSON.parse(res).data
+      let description = data.description// + '  \n  \n**' + data.venue + '**' 
+
+      conv.ask('Here are the details of ' + data.eventName)
+      conv.ask(new BasicCard({
+        title: data.eventName,
+        image: new Image({
+          url: data.banner,
+          alt: data.eventName
+        }),
+        text: description
+      }))
+    })
+    .catch(err =>
+      conv.ask("Sorry, you can ask something else." + JSON.parse(err)))
+})
+
+
 app.intent(EVENT_DESCRIPTION, (conv, { eventName }) => {
   return rp(`https://us-central1-techspardha-87928.cloudfunctions.net/api/events/search?eventName=${eventName}`)
     .then(res => {
 
-      let allData = JSON.parse(res)
-      let data = allData.data
-      let name = `The name of your event is ${data.eventName}` + "\n";
-      let description = `Description : ${data.description}` + "\n";
-      /*let startTime = 'Start time of event is' + timestamp.toDate(data.startTime);
-      let endTime = 'End time of event is' + timestamp.toDate(data.endTime); */
-      let venue = `Venue is ${data.venue}` + "\n";
+      let data = JSON.parse(res).data
+      let description = data.description + '  \n  \n**' + data.venue + '**' 
 
-      return conv.ask(name + description + venue + 'Ask anything ..... m listening to you.')
+      conv.ask('Here are the details of ' + data.eventName)
+      conv.ask(new BasicCard({
+        title: data.eventName,
+        image: new Image({
+          url: data.banner,
+          alt: data.eventName
+        }),
+        text: description
+      }))
     })
     .catch(err =>
-      conv.ask("Sorry, you can ask something else.Ask anything ..... m listening to you."))
+      conv.ask("Sorry, you can ask something else. Ask anything ..... m listening to you."))
 })
 
 
@@ -162,7 +216,7 @@ app.intent(SPECIFIC_DETAIL, (conv, { specificDetail, eventName }) => {
 })
 
 
-app.intent(FACTS, (conv) => {
+app.intent(FACTS, conv => {
   return rp(`https://us-central1-techspardha-87928.cloudfunctions.net/api/facts`)
     .then(res => {
 
