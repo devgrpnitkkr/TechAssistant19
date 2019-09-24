@@ -1,4 +1,4 @@
-const functions = require('firebase-functions');
+const functions = require('firebase-functions')
 const rp = require('request-promise')
 const timestamp = require('unix-timestamp')
 const {
@@ -8,7 +8,8 @@ const {
   BrowseCarousel,
   BrowseCarouselItem,
   List,
-  Image
+  Image,
+  Suggestions
 } = require('actions-on-google')
 
 const app = dialogflow({ debug: true })
@@ -22,7 +23,7 @@ const EVENT_DETAILS_3 = 'eventDetails - 3'
 const FACTS = 'facts'
 const GUEST_LECTURE = 'guestLecture'
 const GUEST_LECTURE_OPTION = 'guest'
-const SPONSERS = 'sponsers'
+const SPONSORS = 'sponsors'
 const SPECIFIC_DETAIL = 'specificDetail'
 const PARTICULAR_GUEST = 'particularGuest'
 const ABOUT = 'about'
@@ -30,6 +31,7 @@ const ABOUT_TECH = 'aboutTechspardha'
 
 app.intent('Default Fallback Intent', conv => {
   conv.ask("Please be more specific and try again.")
+  conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
 })
 
 
@@ -41,16 +43,18 @@ app.intent('Default Welcome Intent', conv => {
     `Say bye at any time to end the conversation.` +
     `</speak>`)
   conv.ask(`Ask something .... I m listening`)
+  conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
 })
 
 
 app.intent(ABOUT_TECH, conv => {
   conv.ask(`<speak>
     Techspardha is the Annual Techno-Managerial Fest of <say-as interpret-as="characters">NIT</say-as> Kurukshetra.
-    It is one of the biggest fest of North India.It is to be held from 26th October to 28th October.
+    It is one of the biggest fest of North India.It is to be held from 27th September to 29th September.
     It witnesses an active participation from over 30 NITs, IITs, and other institutes of repute across the nation every year.
     It has always been graced by the presence of several renowned personality for Guest Lectures and Interactive sessions.</speak>`)
   conv.ask(`Ask anything ..... m listening to you.`)
+  conv.ask(new Suggestions(['Categories', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
 })
 
 
@@ -72,9 +76,12 @@ app.intent(CATEGORY_LIST, conv => {
         title: 'List of Categories',
         items: list
       }))
+      conv.ask(new Suggestions(['About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
     })
-    .catch(res =>
-      conv.ask("Sorry, you can ask something else. Ask anything ..... m listening to you."))
+    .catch(res => {
+      conv.ask("Sorry, you can ask something else. Ask anything ..... m listening to you.")
+      conv.ask(new Suggestions(['About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
+    })
 })
 
 
@@ -96,9 +103,12 @@ app.intent(EVENT_LIST_2, (conv, params, category) => {
         title: 'List of ' + category + ' Events',
         items: list
       }))
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
     })
-    .catch(res =>
-      conv.ask('Sorry, you can ask something else. Ask anything ..... m listening to you.'))
+    .catch(res => {
+      conv.ask('Sorry, you can ask something else. Ask anything ..... m listening to you.')
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
+    })
 })
 
 
@@ -118,9 +128,12 @@ app.intent([EVENT_DETAILS_2, EVENT_DETAILS_3], (conv, params, eventName) => {
         }),
         text: description
       }))
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
     })
-    .catch(err =>
-      conv.ask('Sorry, you can ask something else. Ask anything ..... m listening to you.'))
+    .catch(err => {
+      conv.ask('Sorry, you can ask something else. Ask anything ..... m listening to you.')
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
+    })
 })
 
 app.intent(EVENT_LIST, (conv, { category }) => {
@@ -141,9 +154,12 @@ app.intent(EVENT_LIST, (conv, { category }) => {
         title: 'List of ' + category + ' Events',
         items: list
       }))
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
     })
-    .catch(res =>
-      conv.ask('Sorry, you can ask something else. Ask anything ..... m listening to you.'))
+    .catch(res => {
+      conv.ask('Sorry, you can ask something else. Ask anything ..... m listening to you.')
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
+    })
 })
 
 
@@ -163,9 +179,12 @@ app.intent(EVENT_DETAILS, (conv, { eventName }) => {
         }),
         text: description
       }))
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
     })
-    .catch(err =>
-      conv.ask('Sorry, you can ask something else. Ask anything ..... m listening to you.'))
+    .catch(err => {
+      conv.ask('Sorry, you can ask something else. Ask anything ..... m listening to you.')
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
+    })
 })
 
 
@@ -192,13 +211,17 @@ app.intent(SPECIFIC_DETAIL, (conv, { specificDetail, eventName }) => {
       }
       else {
         conv.ask('Please asking something else like start time, end time, venue, cash prize, etc.')
-        return conv.ask('Ask anything ..... m listening to you.')
+        conv.ask('Ask anything ..... m listening to you.')
+        return conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
       }
       conv.ask(`${specificDetail} of event ${eventName} : \r\n ${detail}`)
       conv.ask('Ask anything ..... m listening to you.')
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
     })
-    .catch(err =>
-      conv.ask('Please try again. Ask anything ..... m listening to you.'))
+    .catch(err => {
+      conv.ask('Please try again. Ask anything ..... m listening to you.')
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
+    })
 })
 
 
@@ -211,9 +234,12 @@ app.intent(FACTS, conv => {
 
       conv.ask(fact)
       conv.ask('Ask anything ..... m listening to you.')
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Sponsors', 'Developers']))
     })
-    .catch(err =>
-      conv.ask('Come on ask something else. We have much more than this!.Ask anything ..... m listening to you.'))
+    .catch(err => {
+      conv.ask('Come on ask something else. We have much more than this!.Ask anything ..... m listening to you.')
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Sponsors', 'Developers']))
+    })
 })
 
 
@@ -239,9 +265,12 @@ app.intent(GUEST_LECTURE, conv => {
         title: 'Guest Lectures',
         items: list
       }))
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Facts', 'Sponsors', 'Developers']))
     })
-    .catch(err =>
-      conv.ask('Sorry cannot fulfill your request.Ask anything ..... m listening to you.'))
+    .catch(err => {
+      conv.ask('Sorry cannot fulfill your request. Ask anything ..... m listening to you.')
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Facts', 'Sponsors', 'Developers']))
+    })
 })
 
 
@@ -265,11 +294,14 @@ app.intent(GUEST_LECTURE_OPTION, (conv, params, guestName) => {
             }),
             display: 'CROPPED'
           }))
+          conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
         }
       }
     })
-    .catch(err =>
-      conv.ask('Sorry Guest Name is not clear. Ask anything ..... m listening to you.'))
+    .catch(err => {
+      conv.ask('Sorry Guest Name is not clear. Ask anything ..... m listening to you.')
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
+    })
 })
 
 
@@ -293,15 +325,18 @@ app.intent(PARTICULAR_GUEST, (conv, { guestName }) => {
             }),
             display: 'CROPPED'
           }))
+          conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
         }
       }
     })
-    .catch(err =>
-      conv.ask('Sorry Guest Name is not clear. Ask anything ..... m listening to you.'))
+    .catch(err => {
+      conv.ask('Sorry Guest Name is not clear. Ask anything ..... m listening to you.')
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Sponsors', 'Developers']))
+    })
 })
 
 
-app.intent(SPONSERS, conv => {
+app.intent(SPONSORS, conv => {
   return rp('https://us-central1-techspardha-87928.cloudfunctions.net/api/sponsors')
     .then(res => {
 
@@ -317,13 +352,16 @@ app.intent(SPONSERS, conv => {
           })
         }))
 
-      conv.ask('Our Sponsors');
+      conv.ask('Our Sponsors')
       conv.ask(new BrowseCarousel({
         items: items
       }))
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Developers']))
     })
-    .catch(err => 
-      conv.ask('Sorry cannot fulfill your request. Ask anything ..... m listening to you.'))
+    .catch(err => {
+      conv.ask('Sorry cannot fulfill your request. Ask anything ..... m listening to you.')
+      conv.ask(new Suggestions(['Categories', 'About Techspardha', 'Guest Lectures', 'Facts', 'Developers']))
+    })
 })
 
 
