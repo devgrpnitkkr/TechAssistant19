@@ -34,19 +34,25 @@ app.intent('Default Fallback Intent', conv => {
 
 
 app.intent('Default Welcome Intent', conv => {
-  conv.ask(`Welcome to Techspardha'18 Prime.Here you can ask any query related to fest like Category Of Events,
-    Events of particular category,any detail of event,guest lectures information.
-    Say bye at any time to end the conversation.
-    Ask something .... I m listening`)
+  conv.ask(`<speak>` + 
+    `Welcome to Techspardha'19 Prime. Here you can ask any query related to fest like` +
+    `Category of Events, events of particular category, any detail of event,` +
+    `guest lectures information <sub alias="etcetra">etc</sub>.` +
+    `Say bye at any time to end the conversation.` +
+    `</speak>`)
+  conv.ask(`Ask something .... I m listening`)
 })
 
 
 app.intent(ABOUT_TECH, conv => {
-  conv.ask(`Techspardha is the Annual Techno-Managerial Fest of NIT Kurukshetra.
+  conv.ask(`<speak>
+    Techspardha is the Annual Techno-Managerial Fest of NIT Kurukshetra.
     It is one of the biggest fest of North India.It is to be held from 26th October to 28th October.
-    It witnesses an active participation from over 30 NITs, IITs, and other institutes of repute across the nation every year.
-    Has always been graced by the presence of several renowned personality for Guest Lectures and Interactive sessions.
-    Ask anything ..... m listening to you.`)
+    It witnesses an active participation from over 30 <say-as interpret-as="characters">NIT</say-as>s,
+    IITs, and other institutes of repute across the nation every year.
+    It has always been graced by the presence of several renowned personality
+    for Guest Lectures and Interactive sessions.</speak>`)
+  conv.ask(`Ask anything ..... m listening to you.`)
 })
 
 
@@ -94,7 +100,7 @@ app.intent(EVENT_LIST_2, (conv, params, category) => {
       }))
     })
     .catch(res =>
-      conv.ask("Sorry, you can ask something else. Ask anything ..... m listening to you."))
+      conv.ask('Sorry, you can ask something else. Ask anything ..... m listening to you.'))
 })
 
 
@@ -103,7 +109,7 @@ app.intent([EVENT_DETAILS_2, EVENT_DETAILS_3], (conv, params, eventName) => {
     .then(res => {
 
       let data = JSON.parse(res).data
-      let description = data.description + '  \n  \n**' + data.venue + '**'
+      let description = data.description + '  \n  \n**VENUE: ' + data.venue + '**'
 
       conv.ask('Here are the details of ' + data.eventName)
       conv.ask(new BasicCard({
@@ -116,7 +122,7 @@ app.intent([EVENT_DETAILS_2, EVENT_DETAILS_3], (conv, params, eventName) => {
       }))
     })
     .catch(err =>
-      conv.ask("Sorry, you can ask something else. Ask anything ..... m listening to you."))
+      conv.ask('Sorry, you can ask something else. Ask anything ..... m listening to you.'))
 })
 
 app.intent(EVENT_LIST, (conv, { category }) => {
@@ -139,7 +145,7 @@ app.intent(EVENT_LIST, (conv, { category }) => {
       }))
     })
     .catch(res =>
-      conv.ask("Sorry, you can ask something else. Ask anything ..... m listening to you."))
+      conv.ask('Sorry, you can ask something else. Ask anything ..... m listening to you.'))
 })
 
 
@@ -148,7 +154,7 @@ app.intent(EVENT_DETAILS, (conv, { eventName }) => {
     .then(res => {
 
       let data = JSON.parse(res).data
-      let description = data.description + '  \n  \n**' + data.venue + '**'
+      let description = data.description + '  \n  \n**VENUE: ' + data.venue + '**'
 
       conv.ask('Here are the details of ' + data.eventName)
       conv.ask(new BasicCard({
@@ -161,7 +167,7 @@ app.intent(EVENT_DETAILS, (conv, { eventName }) => {
       }))
     })
     .catch(err =>
-      conv.ask("Sorry, you can ask something else. Ask anything ..... m listening to you."))
+      conv.ask('Sorry, you can ask something else. Ask anything ..... m listening to you.'))
 })
 
 
@@ -205,10 +211,11 @@ app.intent(FACTS, conv => {
       let allData = JSON.parse(res)
       let fact = allData.data.message
 
-      return conv.ask(fact + '\r\n Ask anything ..... m listening to you.')
+      conv.ask(fact)
+      conv.ask('Ask anything ..... m listening to you.')
     })
     .catch(err =>
-      conv.ask("Come on ask something else. We have much more than this!.Ask anything ..... m listening to you."))
+      conv.ask('Come on ask something else. We have much more than this!.Ask anything ..... m listening to you.'))
 })
 
 
@@ -236,7 +243,7 @@ app.intent(GUEST_LECTURE, conv => {
       }))
     })
     .catch(err =>
-      conv.ask("Sorry cannot fulfill your request.Ask anything ..... m listening to you."))
+      conv.ask('Sorry cannot fulfill your request.Ask anything ..... m listening to you.'))
 })
 
 
@@ -264,7 +271,7 @@ app.intent(GUEST_LECTURE_OPTION, (conv, params, guestName) => {
       }
     })
     .catch(err =>
-      conv.ask("Sorry Guest Name is not clear.Ask anything ..... m listening to you."))
+      conv.ask('Sorry Guest Name is not clear. Ask anything ..... m listening to you.'))
 })
 
 
@@ -292,7 +299,7 @@ app.intent(PARTICULAR_GUEST, (conv, { guestName }) => {
       }
     })
     .catch(err =>
-      conv.ask("Sorry Guest Name is not clear.Ask anything ..... m listening to you."))
+      conv.ask('Sorry Guest Name is not clear. Ask anything ..... m listening to you.'))
 })
 
 
@@ -318,7 +325,7 @@ app.intent(SPONSERS, conv => {
       }))
     })
     .catch(err => 
-      conv.ask("Sorry cannot fulfill your request. Ask anything ..... m listening to you."))
+      conv.ask('Sorry cannot fulfill your request. Ask anything ..... m listening to you.'))
 })
 
 
