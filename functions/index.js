@@ -239,7 +239,7 @@ app.intent(PARTICULAR_GUEST,(conv,{guestName}) => {
                  conv.ask('Here are the details of ' + name)
                  conv.ask(new BasicCard({
                  text: lectures[i].desc,
-                 subtitle: name,
+                 subtitle: 'date' + lectures[i].date,
                   title: name,
                   image: new Image({
                      url: lectures[i].imageUrl,
