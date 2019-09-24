@@ -234,7 +234,7 @@ app.intent(GUEST_LECTURE, conv => {
           })
         }
 
-      conv.ask('Here are the details of guest lectures')
+      conv.ask('Here are the details of guest lectures....')
       conv.ask(new Carousel({
         title: 'Guest Lectures',
         items: list
