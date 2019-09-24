@@ -35,9 +35,9 @@ app.intent('Default Fallback Intent', conv => {
 
 app.intent('Default Welcome Intent', conv => {
   conv.ask(`<speak>` + 
-    `Welcome to Techspardha'19 Prime. Here you can ask any query related to fest like` +
-    `Category of Events, events of particular category, any detail of event,` +
-    `guest lectures information <sub alias="etcetra">etc</sub>.` +
+    `Welcome to Techspardha'19 Prime. Here you can ask any query related to fest like ` +
+    `Category of Events, events of particular category, any detail of event, ` +
+    `Guest Lectures information <sub alias="etcetra">etc</sub>. ` +
     `Say bye at any time to end the conversation.` +
     `</speak>`)
   conv.ask(`Ask something .... I m listening`)
@@ -46,12 +46,10 @@ app.intent('Default Welcome Intent', conv => {
 
 app.intent(ABOUT_TECH, conv => {
   conv.ask(`<speak>
-    Techspardha is the Annual Techno-Managerial Fest of NIT Kurukshetra.
+    Techspardha is the Annual Techno-Managerial Fest of <say-as interpret-as="characters">NIT</say-as> Kurukshetra.
     It is one of the biggest fest of North India.It is to be held from 26th October to 28th October.
-    It witnesses an active participation from over 30 <say-as interpret-as="characters">NIT</say-as>s,
-    IITs, and other institutes of repute across the nation every year.
-    It has always been graced by the presence of several renowned personality
-    for Guest Lectures and Interactive sessions.</speak>`)
+    It witnesses an active participation from over 30 NITs, IITs, and other institutes of repute across the nation every year.
+    It has always been graced by the presence of several renowned personality for Guest Lectures and Interactive sessions.</speak>`)
   conv.ask(`Ask anything ..... m listening to you.`)
 })
 
